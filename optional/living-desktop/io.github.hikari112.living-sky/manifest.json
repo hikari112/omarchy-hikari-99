@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.hikari112.living-sky",
+  "name": "Living Sky (experimental)",
+  "version": "1.0.0",
+  "author": "hikari",
+  "license": "MIT",
+  "description": "The desktop background, alive: the wallpaper drawn in 12-bit dither with drifting clouds and a breathing light, from the Hikari 99 lock screen",
+  "kinds": [
+    "service"
+  ],
+  "entryPoints": {
+    "service": "Background.qml"
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.background"
+  }
+}

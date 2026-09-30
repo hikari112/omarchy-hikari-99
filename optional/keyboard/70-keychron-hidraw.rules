@@ -1,0 +1,4 @@
+# Keychron keyboards: let the logged-in user reach the raw HID interface, for
+# the keychron-glow lighting service (and Keychron Launcher or VIA). uaccess
+# must be tagged before 73-seat-late.rules.
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3434", MODE="0660", TAG+="uaccess"
