@@ -4,7 +4,7 @@
 lighting, installer and the Living Sky plugin): MIT, see `LICENSE`.
 
 **Stroke order for 光 and 月**: the point data inside `Hikari-99.qml`,
-`Hikari-99-Real-Sky.qml`, `Tsukiyo.qml`, `TsukiyoRealSky.qml` and
+`Hikari-99-Real-Sky.qml`, `Tsukiyo-99.qml`, `Tsukiyo-99-Real-Sky.qml` and
 `lock-designs/hikari-99/boot/strokes.json` is derived from
 [KanjiVG](https://kanjivg.tagaini.net/), Copyright (C) 2009/2010/2011 Ulrich Apel,
 licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/).

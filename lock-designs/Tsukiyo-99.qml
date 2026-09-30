@@ -1,4 +1,4 @@
-// Tsukiyo 月夜, moonlit night
+// Tsukiyo 99 月夜, moonlit night
 //
 // The time of day, told in the wallpaper's own processes. Day is the sky piece
 // (12-bit color, noise-dithered, on the art's pixel grid), evening the house
@@ -9,8 +9,8 @@
 // Two clocks, picked with followSun. Off (this design): every lock runs the
 // whole day, evening at about five minutes, night by twenty-two (or at the
 // same pace to the length in shared/night-minutes), and typing brings the
-// color back. On (Tsukiyo Real Sky, TsukiyoRealSky.qml, generated
-// from this file by tsukiyo/build.sh): the real sun decides, worked out with
+// color back. On (Tsukiyo 99 Real Sky, Tsukiyo-99-Real-Sky.qml,
+// generated from this file by tsukiyo-99/build.sh): the real sun decides, worked out with
 // no network for the place below.
 //
 // At night 月 is the moon: its glow goes through the Bayer matrix and breaks
@@ -28,8 +28,9 @@
 // wrong password, the unlock), never which key. See the README.
 //
 // Stroke order for 月 from KanjiVG, (c) Ulrich Apel, CC BY-SA 3.0.
-// The sky is tsukiyo/sky.frag. After editing it, or this file, run
-// tsukiyo/build.sh: it compiles the shader and regenerates TsukiyoRealSky.qml.
+// The sky is tsukiyo-99/sky.frag. After editing it, or this file, run
+// tsukiyo-99/build.sh: it compiles the shader and regenerates
+// Tsukiyo-99-Real-Sky.qml.
 import QtQuick
 import QtQuick.Effects
 import QtQuick.Window
@@ -451,7 +452,7 @@ DesignBase {
     id: sky
     anchors.fill: parent
     visible: wallImage.status === Image.Ready
-    fragmentShader: Qt.resolvedUrl("tsukiyo/sky-aab57052.frag.qsb")
+    fragmentShader: Qt.resolvedUrl("tsukiyo-99/sky-b0ec2d4f.frag.qsb")
 
     property var wall: wallTexture
     property var ink: inkTexture

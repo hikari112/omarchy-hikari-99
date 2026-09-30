@@ -11,10 +11,10 @@ gets on the screen.
 |---|---|
 | **Hikari 99** 光 | Your wallpaper, alive. 光 ("light") is written stroke by stroke in textbook order. Evening comes at about 5 minutes, the first stars at 13, full night at 22 (or on your own timing). Typing lets light through the clouds and brings the day back. A wrong password is a cloud's shadow; the right one parts the clouds. |
 | **Hikari 99 Real Sky** | The same, but the real sun decides: day while the sun is up where you are, evening at sunset, stars at night. |
-| **Tsukiyo** 月夜 | "Moonlit night." The day in 12-bit color, the evening in four hatched colors, the night in 1-bit dither with 月 as an eclipse. Each key sends a ripple out. A wrong password is a VHS tracking error. |
-| **Tsukiyo Real Sky** | Tsukiyo on the real sun. |
+| **Tsukiyo 99** 月夜 | "Moonlit night." The day in 12-bit color, the evening in four hatched colors, the night in 1-bit dither with 月 as an eclipse. Each key sends a ripple out. A wrong password is a VHS tracking error. |
+| **Tsukiyo 99 Real Sky** | Tsukiyo 99 on the real sun. |
 
-![Tsukiyo through a whole lock: 12-bit day, hatched evening, 1-bit eclipse at night, back to day](media/tsukiyo.webp)
+![Tsukiyo 99 through a whole lock: 12-bit day, hatched evening, 1-bit eclipse at night, back to day](media/tsukiyo-99.webp)
 
 The previews run five times faster than life. The full 4K recordings are on the
 [release page](https://github.com/hikari112/omarchy-hikari-99/releases/latest).
@@ -62,12 +62,16 @@ Then open the explorer with `omarchy-shell lock explore`: they're under
 Animation, or search for `hikari` or `tsukiyo`. From a terminal:
 
 ```sh
-omarchy-shell lock setDesign my-hikari-99            # or my-hikari-99-real-sky, my-tsukiyo, my-tsukiyorealsky
-omarchy-shell lock previewDesign my-tsukiyo          # try one (you can type in the preview)
+omarchy-shell lock setDesign my-hikari-99            # or my-hikari-99-real-sky, my-tsukiyo-99, my-tsukiyo-99-real-sky
+omarchy-shell lock previewDesign my-tsukiyo-99       # try one (you can type in the preview)
 ```
 
 If a design shows up as the plain fallback right after installing, restart the
 shell once: `omarchy restart shell`.
+
+Installed 1.0.0? Tsukiyo is called Tsukiyo 99 now. Pull and run `./install.sh`
+again: it takes the old files out and moves your lock screen over if it was
+Tsukiyo.
 
 ## Good to know
 
@@ -79,7 +83,7 @@ shell once: `omarchy restart shell`.
   `latitude longitude` in degrees on one line in
   `~/.config/omarchy/lock-designs/shared/location`, for example
   `40.71 -74.01`.
-- **How long night takes.** Hikari 99 and Tsukiyo reach night 22 minutes after
+- **How long night takes.** Hikari 99 and Tsukiyo 99 reach night 22 minutes after
   you lock, with evening at about 5 and the first stars at about 13. The
   installer asks for your own length, from 2 minutes to a day, and everything
   keeps the same pace: at 45 minutes, evening comes at about 10 and the stars at
@@ -189,9 +193,9 @@ leaves the fonts in `~/.local/share/fonts/omarchy-hikari-99`.
 ## For tinkerers
 
 - Each design's sky is a shader: `lock-designs/hikari-99/sky.frag` and
-  `lock-designs/tsukiyo/sky.frag`. After editing one, run the `build.sh` next to
+  `lock-designs/tsukiyo-99/sky.frag`. After editing one, run the `build.sh` next to
   it (needs `qt6-shadertools`). It compiles the shader and regenerates the Real
-  Sky twin, so edit `Hikari-99.qml` or `Tsukiyo.qml` and never the twins.
+  Sky twin, so edit `Hikari-99.qml` or `Tsukiyo-99.qml` and never the twins.
 - After editing a design, run `omarchy-shell lock reloadDesigns` so open
   previews pick up the change.
 - The boot screen is drawn by `lock-designs/hikari-99/boot/render.py` (Pillow)

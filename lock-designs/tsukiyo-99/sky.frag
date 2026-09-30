@@ -1,5 +1,5 @@
 #version 440
-// Tsukiyo 月夜. The time of day is told with the wallpaper's own processes:
+// Tsukiyo 99 月夜. The time of day is told with the wallpaper's own processes:
 //   day      the sky piece:   12-bit color, noise-dithered, on the art's pixel grid
 //   evening  the house piece: four colors, dithered in '/' hatching
 //   night    the moon piece:  1-bit, ordered (Bayer) dither

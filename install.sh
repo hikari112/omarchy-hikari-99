@@ -1,6 +1,7 @@
 #!/bin/bash
-# Hikari 99 lock screens for Omarchy: Hikari 99, Hikari 99 Real Sky, Tsukiyo
-# and Tsukiyo Real Sky, for the Lock Screen Explorer plugin. Optional: the
+# Hikari 99 lock screens for Omarchy: Hikari 99, Hikari 99 Real Sky,
+# Tsukiyo 99 and Tsukiyo 99 Real Sky, for the Lock Screen Explorer plugin.
+# Optional: the
 # Sky 99 theme or its wallpaper, the Living Sky desktop (experimental), the
 # matching boot screen, a lock screen that stays lit, and Keychron Q6 Max
 # keyboard lighting.
@@ -17,12 +18,12 @@
 #   --living-desktop   install the Living Sky desktop plugin (experimental)
 #   --boot             make the boot screen (disk unlock) match Hikari 99
 #   --night <minutes>  how long a lock takes to reach night, 2 to 1440
-#                      (Hikari 99 and Tsukiyo; made for 22)
+#                      (Hikari 99 and Tsukiyo 99; made for 22)
 #   --stay-lit         keep the lock screen lit until night has come (up to
 #                      60 minutes; the explorer blanks it after 5 seconds)
 #   --keyboard         Keychron Q6 Max lighting (ANSI with knob, on its cable)
 #   --set <id>         make one of the four your lock screen:
-#                      my-hikari-99, my-hikari-99-real-sky, my-tsukiyo, my-tsukiyorealsky
+#                      my-hikari-99, my-hikari-99-real-sky, my-tsukiyo-99, my-tsukiyo-99-real-sky
 #   --all              --theme --living-desktop --boot --stay-lit, and
 #                      --keyboard when a Q6 Max is plugged in; implies --yes
 #   --no-fonts         don't install the bundled fonts (Klee One, Murecho)
@@ -48,7 +49,9 @@ unit_dir="$HOME/.config/systemd/user"
 glow_unit="keychron-glow.service"
 udev_rule="/etc/udev/rules.d/70-keychron-hidraw.rules"
 night_file="$designs/shared/night-minutes"
-ids=(my-hikari-99 my-hikari-99-real-sky my-tsukiyo my-tsukiyorealsky)
+ids=(my-hikari-99 my-hikari-99-real-sky my-tsukiyo-99 my-tsukiyo-99-real-sky)
+# Tsukiyo was called that until 1.0.0; now Tsukiyo 99
+old_ids=(my-tsukiyo my-tsukiyorealsky)
 
 want_theme="" want_wallpaper="" want_sky="" want_boot="" want_lit="" want_keyboard=""
 set_design="" night="" no_fonts="" yes="" uninstall="" all=""
@@ -135,7 +138,7 @@ uninstall_all() {
   say "Removing the Hikari 99 lock screens"
   local current
   current=$(omarchy-shell lock design 2>/dev/null || true)
-  for id in "${ids[@]}"; do
+  for id in "${ids[@]}" "${old_ids[@]}"; do
     if [[ $current == "$id" ]]; then
       shell_ipc lock setDesign card
       note "lock screen set back to Greeting Card (the explorer's default)"
@@ -185,7 +188,7 @@ uninstall_all() {
       esac
     done <"$record"
   fi
-  rmdir "$designs/hikari-99/boot" "$designs/hikari-99" "$designs/tsukiyo" "$data_dir" 2>/dev/null || true
+  rmdir "$designs/hikari-99/boot" "$designs/hikari-99" "$designs/tsukiyo-99" "$designs/tsukiyo" "$data_dir" 2>/dev/null || true
   systemctl --user daemon-reload >/dev/null 2>&1 || true
 
   if [[ -d $plugins/$sky_id ]]; then
@@ -327,7 +330,7 @@ set_night() {
 choose_night() {
   local now="$1" pick
   if command -v gum >/dev/null 2>&1; then
-    pick=$(gum choose --header "How long should a lock take to reach night? (Hikari 99 and Tsukiyo; the Real Sky versions follow the sun)" \
+    pick=$(gum choose --header "How long should a lock take to reach night? (Hikari 99 and Tsukiyo 99; the Real Sky versions follow the sun)" \
       "$now minutes (now)" 10 15 22 30 45 60 90 "other" || true)
     pick=${pick%% *}
     if [[ $pick == other ]]; then pick=$(gum input --placeholder "minutes, 2 to 1440" || true); fi
@@ -416,15 +419,30 @@ else
 fi
 
 # 2. The four designs, their shaders, and the memory their screens share
-for f in Hikari-99.qml Hikari-99-Real-Sky.qml Tsukiyo.qml TsukiyoRealSky.qml \
-  hikari-99/sky.frag hikari-99/build.sh tsukiyo/sky.frag tsukiyo/build.sh shared/lock-state.js; do
+for f in Hikari-99.qml Hikari-99-Real-Sky.qml Tsukiyo-99.qml Tsukiyo-99-Real-Sky.qml \
+  hikari-99/sky.frag hikari-99/build.sh tsukiyo-99/sky.frag tsukiyo-99/build.sh shared/lock-state.js; do
   place "$here/lock-designs/$f" "$designs/$f"
 done
-for f in "$here"/lock-designs/hikari-99/*.qsb "$here"/lock-designs/tsukiyo/*.qsb; do
+for f in "$here"/lock-designs/hikari-99/*.qsb "$here"/lock-designs/tsukiyo-99/*.qsb; do
   place "$f" "$designs/$(basename "$(dirname "$f")")/$(basename "$f")"
 done
-chmod +x "$designs/hikari-99/build.sh" "$designs/tsukiyo/build.sh"
+chmod +x "$designs/hikari-99/build.sh" "$designs/tsukiyo-99/build.sh"
 note "lock screens installed in $designs"
+
+# Tsukiyo before it became Tsukiyo 99: take out the old files this installed
+renamed_from=""
+for f in "$designs/Tsukiyo.qml" "$designs/TsukiyoRealSky.qml" "$designs/tsukiyo/sky.frag" \
+  "$designs/tsukiyo/build.sh" "$designs"/tsukiyo/sky-*.frag.qsb; do
+  if recorded "$f" && [[ -e $f ]]; then rm -f -- "$f"; renamed_from=1; fi
+done
+rmdir "$designs/tsukiyo" 2>/dev/null || true
+if [[ -n $renamed_from ]]; then
+  note "Tsukiyo is Tsukiyo 99 now (the name was taken): the old files are gone"
+  case $(omarchy-shell lock design 2>/dev/null || true) in
+    my-tsukiyo) [[ -n $set_design ]] || set_design=my-tsukiyo-99 ;;
+    my-tsukiyorealsky) [[ -n $set_design ]] || set_design=my-tsukiyo-99-real-sky ;;
+  esac
+fi
 
 # 3. Fonts
 if [[ -z $no_fonts ]]; then install_fonts; fi
@@ -500,7 +518,7 @@ fi
 # 10. Which one to use
 if [[ -z $set_design && -z $yes ]] && command -v gum >/dev/null 2>&1; then
   set_design=$(gum choose --header "Make one your lock screen?" \
-    "my-hikari-99" "my-hikari-99-real-sky" "my-tsukiyo" "my-tsukiyorealsky" "not now" || true)
+    "my-hikari-99" "my-hikari-99-real-sky" "my-tsukiyo-99" "my-tsukiyo-99-real-sky" "not now" || true)
   [[ $set_design == "not now" ]] && set_design=""
 fi
 if [[ -z $set_design && -n $all ]]; then set_design=my-hikari-99; fi
