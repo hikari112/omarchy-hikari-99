@@ -8,6 +8,8 @@
 // a fullscreen window covers the monitor.
 //   omarchy-shell background living false   # the plain wallpaper again
 //   omarchy-shell background living true
+//   omarchy-shell background toggleLiving   # flip it, with an on-screen note
+//                                            (bind it to a key: see the README)
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
@@ -190,6 +192,18 @@ Item {
     function isLiving(): string {
       return root.living ? "on" : "off"
     }
+
+    // For a key: games and video get the GPU back, and a note says which
+    function toggleLiving(): string {
+      root.living = !root.living
+      livingNote.running = true
+      return root.living ? "on" : "off"
+    }
+  }
+
+  Process {
+    id: livingNote
+    command: ["/usr/share/omarchy/bin/omarchy-osd", "-i", "display", "-m", root.living ? "Living sky on" : "Living sky off"]
   }
 
   Timer {

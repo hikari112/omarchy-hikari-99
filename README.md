@@ -137,15 +137,25 @@ background plugin (switching themes still works) and pauses while a fullscreen
 window covers the monitor.
 
 It costs GPU power, because the screen is redrawn every frame: on an Arc A750
-driving a 4K and a 1080p screen, the card drew about 25-30 W more with it on.
-Turn it off and on without uninstalling:
+driving a 4K and a 1080p screen, the card drew about 25-35 W more with it on.
+So it has an off switch for games: **SUPER+CTRL+ALT+SPACE** (next to the
+background switcher on SUPER+CTRL+SPACE) turns it off and on, with a note on
+screen. The installer offers the key and only binds it if it's free. From a
+terminal or your own key:
 
 ```sh
+omarchy-shell background toggleLiving    # off and on
 omarchy-shell background living false    # the plain wallpaper
 omarchy-shell background living true
 ```
 
 Run `omarchy restart shell` once after installing so those commands reach it.
+It's back on after the shell restarts. To bind the switch yourself, in
+`~/.config/hypr/bindings.lua`:
+
+```lua
+o.bind("SUPER + CTRL + ALT + SPACE", "Toggle living sky", "omarchy-shell background toggleLiving")
+```
 Remove it with `omarchy plugin disable io.github.hikari112.living-sky`, or
 with `./install.sh --uninstall`.
 

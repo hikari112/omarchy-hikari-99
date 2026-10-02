@@ -41,6 +41,8 @@ explorer_url="https://github.com/SirJul1337/omarchy-lock-explorer.git"
 explorer_boot="$plugins/$explorer_id/plymouth"
 boot_state="$HOME/.local/state/omarchy/lock-explorer-boot"
 sky_id="io.github.hikari112.living-sky"
+bindings="$HOME/.config/hypr/bindings.lua"
+key_mark="-- omarchy-hikari-99: living sky key (./install.sh --uninstall takes it out)"
 record="$designs/shared/.omarchy-hikari-99"
 settings="$designs/shared/.omarchy-hikari-99-settings"
 fonts_dir="$HOME/.local/share/fonts/omarchy-hikari-99"
@@ -191,6 +193,13 @@ uninstall_all() {
   rmdir "$designs/hikari-99/boot" "$designs/hikari-99" "$designs/tsukiyo-99" "$designs/tsukiyo" "$data_dir" 2>/dev/null || true
   systemctl --user daemon-reload >/dev/null 2>&1 || true
 
+  if grep -qxF -- "$key_mark" "$bindings" 2>/dev/null; then
+    cp "$bindings" "$bindings.bak-$(date +%s)"
+    awk -v mark="$key_mark" '$0 == mark { skip = 1; next } skip && /^o\.bind\(/ { skip = 0; next } { skip = 0; print }' \
+      "$bindings" >"$bindings.tmp" && mv "$bindings.tmp" "$bindings"
+    hyprctl reload >/dev/null 2>&1 || true
+    note "took the living sky key out of $bindings"
+  fi
   if [[ -d $plugins/$sky_id ]]; then
     omarchy plugin disable "$sky_id" >/dev/null 2>&1 || true
     rm -rf -- "${plugins:?}/$sky_id"
@@ -257,6 +266,27 @@ other_background_clone() {
       return
     fi
   done
+}
+
+# SUPER+CTRL+ALT+SPACE switches the living sky on and off, if the key is free
+bind_living_key() {
+  if grep -qxF -- "$key_mark" "$bindings" 2>/dev/null; then
+    note "SUPER+CTRL+ALT+SPACE already switches the living sky"
+    return
+  fi
+  if [[ ! -f $bindings ]]; then
+    warn "no $bindings to add the key to; see the README to bind it yourself"
+    return
+  fi
+  if hyprctl binds -j 2>/dev/null | jq -e '.[] | select(.key == "SPACE" and .modmask == 76)' >/dev/null; then
+    warn "SUPER+CTRL+ALT+SPACE is taken; bind 'omarchy-shell background toggleLiving' to a key of your own (see the README)"
+    return
+  fi
+  cp "$bindings" "$bindings.bak-$(date +%s)"
+  printf '\n%s\no.bind("SUPER + CTRL + ALT + SPACE", "Toggle living sky", "omarchy-shell background toggleLiving")\n' \
+    "$key_mark" >>"$bindings"
+  hyprctl reload >/dev/null 2>&1 || true
+  note "SUPER+CTRL+ALT+SPACE switches the living sky off and on (for games), with a note on screen"
 }
 
 # Pillow, for drawing the boot screen
@@ -491,9 +521,10 @@ if ask "Install the Living Sky desktop (experimental: the wallpaper animated at 
     cp -r "$here/optional/living-desktop/$sky_id" "$plugins/$sky_id"
     remember "$plugins/$sky_id"
     omarchy plugin enable "$sky_id" >/dev/null
-    note "Living Sky enabled. Run 'omarchy restart shell' once so its on/off command works:"
-    note "  omarchy-shell background living false   (the plain wallpaper)"
-    note "  omarchy-shell background living true"
+    note "Living Sky enabled. Run 'omarchy restart shell' once so its on/off commands work"
+    if ask "Use SUPER+CTRL+ALT+SPACE to switch it off and on (for games: it saves the GPU 25-30 W)?" "$want_sky"; then
+      bind_living_key
+    fi
   fi
 fi
 
